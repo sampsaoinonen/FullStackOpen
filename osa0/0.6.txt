@@ -1,0 +1,17 @@
+note over selain:
+Selain suorittaa tapahtumakäsittelijän joka estää oletustoiminnon eli lomakkeen lähettämisen 
+ja sivun uudelleen lataamisen. Sen sijaan Javascript-koodi lisää muistiinpanon listalle sekä 
+renderöi muistiinpanojenlistan uudelleen dom-apia käyttäen
+end note
+
+note over selain:
+selain lähettää tiedot palvelimelle JSON-muodossa
+end note
+
+selain->palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+
+note over palvelin:
+palvelin vastaa takaisin 201 created
+end note
+
+palvelin-->selain: 201 created
