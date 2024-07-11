@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {   
-   "title": "vr",
+   "title": "veeärrä",
     "author": "ValtionRautatiet",
     "url": "vr.fi",
-    "likes": "2"
+    "likes": "5"
 }
