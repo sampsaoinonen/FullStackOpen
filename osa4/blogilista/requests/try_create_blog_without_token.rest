@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{   
+  "title": "jepujee",
+  "author": "okei",
+  "url": "veer.fi",
+  "likes": 5,
+  "user": "669cf56270d85ff2f2966978"
+}

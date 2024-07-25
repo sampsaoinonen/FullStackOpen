@@ -1,9 +1,11 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBwZXNvbmVuIiwiaWQiOiI2NjljZjU2MjcwZDg1ZmYyZjI5NjY5NzgiLCJpYXQiOjE3MjE3MjAxMTV9.6j_092yhwcu4mN8osEdXufu1dQJ24EDb6nWXOUywUNs
 
 {   
-   "title": "veeärrä",
-    "author": "ValtionRautatiet",
-    "url": "vr.fi",
-    "likes": "5"
+  "title": "jepujee",
+  "author": "okei",
+  "url": "veer.fi",
+  "likes": 5,
+  "user": "669cf56270d85ff2f2966978"
 }
