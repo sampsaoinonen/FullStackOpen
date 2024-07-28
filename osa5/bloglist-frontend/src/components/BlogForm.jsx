@@ -1,40 +1,52 @@
+import PropTypes from 'prop-types'
+
 const BlogForm = ({
-    addBlog,
-    handleTitleChange,
-    handleAuthorChange,
-    handleUrlChange,
-    newTitle,
-    newAuthor,
-    newUrl      
-    }) => {
-    return (
-        <div>
-        <form onSubmit={addBlog}>
+  addBlog,
+  handleTitleChange,
+  handleAuthorChange,
+  handleUrlChange,
+  newTitle,
+  newAuthor,
+  newUrl
+}) => {
+  return (
+    <div>
+      <form onSubmit={addBlog}>
         <div>
             Title:
-            <input
+          <input
             value={newTitle}
-            onChange={handleTitleChange}          
-            />
+            onChange={handleTitleChange}
+          />
         </div>
         <div>
             Author:
-            <input
+          <input
             value={newAuthor}
-            onChange={handleAuthorChange}          
-            />
+            onChange={handleAuthorChange}
+          />
         </div>
         <div>
             url:
-            <input
+          <input
             value={newUrl}
-            onChange={handleUrlChange}          
-            />
+            onChange={handleUrlChange}
+          />
         </div>
         <button type="submit">create</button>
-        </form> 
-        </div>
-)
+      </form>
+    </div>
+  )
+}
+
+BlogForm.propTypes = {
+  addBlog: PropTypes.func.isRequired,
+  handleTitleChange: PropTypes.func.isRequired,
+  handleAuthorChange: PropTypes.func.isRequired,
+  handleUrlChange: PropTypes.func.isRequired,
+  newTitle: PropTypes.string.isRequired,
+  newAuthor: PropTypes.string.isRequired,
+  newUrl: PropTypes.string.isRequired
 }
 
 export default BlogForm

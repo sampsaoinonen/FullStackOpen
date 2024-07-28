@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
@@ -13,11 +13,12 @@ const App = () => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
-  const [message, setMessage] = useState(null) 
-  const [username, setUsername] = useState('') 
+  const [message, setMessage] = useState(null)
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -25,19 +26,19 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
-      
+
     }
   }, [])
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    
+
     try {
       const user = await loginService.login({
         username, password,
@@ -72,7 +73,7 @@ const App = () => {
 
     try {
       const returnedBlog = await blogService.create(blogObject)
-      console.log("returnedBlog" ,returnedBlog)
+      console.log('returnedBlog' ,returnedBlog)
       setBlogs(blogs.concat(returnedBlog))
       setNewTitle('')
       setNewAuthor('')
@@ -84,6 +85,7 @@ const App = () => {
       setTimeout(() => {
         setMessage(null)
       }, 5000)
+      blogFormRef.current.toggleVisibility()
     } catch (error) {
       setMessage({ text: 'failed to add a new blog', type: 'error' })
       setTimeout(() => {
@@ -97,7 +99,7 @@ const App = () => {
       ...blog,
       likes: blog.likes + 1,
     }
-  
+
     try {
       const returnedBlog = await blogService.update(blog.id, updatedBlog)
       setBlogs(prevBlogs => {
@@ -116,7 +118,7 @@ const App = () => {
     try {
       const blogToRemove = blogs.find(b => b.id === id)
       await blogService.remove(id)
-      console.log("removedblog", removeBlog)
+      console.log('removedblog', removeBlog)
       setBlogs(blogs.filter(b => b.id !== id))
       setMessage({
         text: `Blog ${blogToRemove.title} by ${blogToRemove.author} removed successfully`,
@@ -132,22 +134,22 @@ const App = () => {
       }, 5000)
     }
   }
-  
-   return (
+
+  return (
     <div>
       <Notification message={message} />
-      {!user && 
+      {!user &&
       <LoginForm
-      username={username}
-      password={password}
-      handleUsernameChange={({ target }) => setUsername(target.value)}
-      handlePasswordChange={({ target }) => setPassword(target.value)}
-      handleLogin={handleLogin}
-    />
-      } 
-      {user && 
+        username={username}
+        password={password}
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+        handlePasswordChange={({ target }) => setPassword(target.value)}
+        handleLogin={handleLogin}
+      />
+      }
+      {user &&
       <div>
-        <p>{user.name} logged in 
+        <p>{user.name} logged in
           <button onClick={() => {
             window.localStorage.removeItem('loggedBlogappUser')
             setUser(null)
@@ -159,8 +161,8 @@ const App = () => {
             Logout
           </button>
         </p>
-        <Togglable buttonLabel="create new blog">
-        <BlogForm
+        <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+          <BlogForm
             addBlog={addBlog}
             handleTitleChange={({ target }) => setNewTitle(target.value)}
             handleAuthorChange={({ target }) => setNewAuthor(target.value)}
@@ -170,20 +172,20 @@ const App = () => {
             newUrl={newUrl}
           />
         </Togglable>
-       <h2>blogs</h2>
+        <h2>blogs</h2>
         {blogs.map(blog =>
           <Blog
-              key={blog.id}
-              blog={blog}
-              user={user}
-              likeBlog={likeBlog}
-              removeBlog={removeBlog}
-            />
+            key={blog.id}
+            blog={blog}
+            user={user}
+            likeBlog={likeBlog}
+            removeBlog={removeBlog}
+          />
         )}
       </div>
-    }
+      }
     </div>
-    ) 
-  }    
- 
+  )
+}
+
 export default App
