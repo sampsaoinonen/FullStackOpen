@@ -4,6 +4,9 @@ import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css'
+import BlogForm from './components/BlogForm'
+import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -14,6 +17,7 @@ const App = () => {
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -58,105 +62,89 @@ const App = () => {
   }
 
 
-  const addBlog = (event) => {
+  const addBlog = async (event) => {
     event.preventDefault()
     const blogObject = {
       title: newTitle,
       author: newAuthor,
       url: newUrl
     }
+
+    try {
+      const returnedBlog = await blogService.create(blogObject)
+      console.log("returnedBlog" ,returnedBlog)
+      setBlogs(blogs.concat(returnedBlog))
+      setNewTitle('')
+      setNewAuthor('')
+      setNewUrl('')
+      setMessage({
+        text: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+        type: 'success'
+      })
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    } catch (error) {
+      setMessage({ text: 'failed to add a new blog', type: 'error' })
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    }
+  }
+
+  const likeBlog = async (blog) => {
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes + 1,
+    }
   
-    blogService
-      .create(blogObject)
-        .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-        setNewTitle('')
-        setNewAuthor('')
-        setNewUrl('')
-        setMessage({ text: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, 
-          type: 'success' })
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
+    try {
+      const returnedBlog = await blogService.update(blog.id, updatedBlog)
+      setBlogs(prevBlogs => {
+        const updatedBlogs = prevBlogs.map(b => b.id === blog.id ? returnedBlog : b)
+        return updatedBlogs.sort((a, b) => b.likes - a.likes)
       })
-      .catch(error => {
-        setMessage({ text: 'failed to add a new blog', type: 'error' })
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
+    } catch (error) {
+      setMessage({ text: `failed to like the blog ${blog.title}`, type: 'error' })
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    }
+  }
+
+  const removeBlog = async (id) => {
+    try {
+      const blogToRemove = blogs.find(b => b.id === id)
+      await blogService.remove(id)
+      console.log("removedblog", removeBlog)
+      setBlogs(blogs.filter(b => b.id !== id))
+      setMessage({
+        text: `Blog ${blogToRemove.title} by ${blogToRemove.author} removed successfully`,
+        type: 'success'
       })
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    } catch (error) {
+      setMessage({ text: 'failed to remove the blog', type: 'error' })
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    }
   }
-
-  const handleTitleChange = (event) => {
-    setNewTitle(event.target.value)
-  }
-
-  const handleAuthorChange = (event) => {
-    setNewAuthor(event.target.value)
-  }
-
-  const handleUrlChange = (event) => {
-    setNewUrl(event.target.value)
-  }
-
-  const loginForm = () => (
-    <div>
-      <h2>log in to application</h2>
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-          <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-          <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
-    </div>  
-  )
-
-  const blogForm = () => (
-    <form onSubmit={addBlog}>
-      <div>
-        Title:
-        <input
-          value={newTitle}
-          onChange={handleTitleChange}          
-        />
-      </div>
-      <div>
-        Author:
-        <input
-          value={newAuthor}
-          onChange={handleAuthorChange}          
-        />
-      </div>
-      <div>
-        url:
-        <input
-          value={newUrl}
-          onChange={handleUrlChange}          
-        />
-      </div>
-      <button type="submit">create</button>
-    </form> 
-  )
-
-  return (
+  
+   return (
     <div>
       <Notification message={message} />
-      {!user && loginForm()} 
+      {!user && 
+      <LoginForm
+      username={username}
+      password={password}
+      handleUsernameChange={({ target }) => setUsername(target.value)}
+      handlePasswordChange={({ target }) => setPassword(target.value)}
+      handleLogin={handleLogin}
+    />
+      } 
       {user && 
       <div>
         <p>{user.name} logged in 
@@ -171,17 +159,31 @@ const App = () => {
             Logout
           </button>
         </p>
-        {blogForm()}
+        <Togglable buttonLabel="create new blog">
+        <BlogForm
+            addBlog={addBlog}
+            handleTitleChange={({ target }) => setNewTitle(target.value)}
+            handleAuthorChange={({ target }) => setNewAuthor(target.value)}
+            handleUrlChange={({ target }) => setNewUrl(target.value)}
+            newTitle={newTitle}
+            newAuthor={newAuthor}
+            newUrl={newUrl}
+          />
+        </Togglable>
        <h2>blogs</h2>
         {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+          <Blog
+              key={blog.id}
+              blog={blog}
+              user={user}
+              likeBlog={likeBlog}
+              removeBlog={removeBlog}
+            />
         )}
       </div>
-    } 
-
-      
+    }
     </div>
-  )
-}
-
+    ) 
+  }    
+ 
 export default App

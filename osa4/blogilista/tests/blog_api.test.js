@@ -7,8 +7,6 @@ const api = supertest(app)
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-
-
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const { listWithOneBlog, listWithSixBlogs, blogsInSixBlogs, usersInDb, getToken} = require('./test_data')

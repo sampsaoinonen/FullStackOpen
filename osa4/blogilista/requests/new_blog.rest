@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBwZXNvbmVuIiwiaWQiOiI2NjljZjU2MjcwZDg1ZmYyZjI5NjY5NzgiLCJpYXQiOjE3MjIxNzczNDh9.xPRhmZpZ4JSHyVv_rbLbpnF5aFDJx6X_3Q1EVB5AxM4
 Content-Type: application/json
-
 
 {   
   "title": "jepujee",
