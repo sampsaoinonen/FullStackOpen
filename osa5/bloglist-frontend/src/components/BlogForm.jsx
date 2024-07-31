@@ -1,23 +1,33 @@
 import PropTypes from 'prop-types'
+import { useState } from 'react'
 
-const BlogForm = ({
-  addBlog,
-  handleTitleChange,
-  handleAuthorChange,
-  handleUrlChange,
-  newTitle,
-  newAuthor,
-  newUrl
-  
-}) => {
+const BlogForm = ({ addBlog }) => {
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newUrl, setNewUrl] = useState('')
+
+  const createBlog = async (event) => {
+    event.preventDefault()
+
+    const blogObject = {
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl
+    }
+
+    addBlog(blogObject)
+    setNewTitle('')
+    setNewAuthor('')
+    setNewUrl('')
+  }
   return (
     <div>
-      <form onSubmit={addBlog}>
+      <form onSubmit={createBlog}>
         <div>
             Title:
           <input
             value={newTitle}
-            onChange={handleTitleChange}
+            onChange={({ target }) => setNewTitle(target.value)}
             placeholder="Title"
           />
         </div>
@@ -25,7 +35,7 @@ const BlogForm = ({
             Author:
           <input
             value={newAuthor}
-            onChange={handleAuthorChange}
+            onChange={({ target }) => setNewAuthor(target.value)}
             placeholder="Author"
           />
         </div>
@@ -33,7 +43,7 @@ const BlogForm = ({
             url:
           <input
             value={newUrl}
-            onChange={handleUrlChange}
+            onChange={({ target }) => setNewUrl(target.value)}
             placeholder="URL"
           />
         </div>
@@ -45,12 +55,6 @@ const BlogForm = ({
 
 BlogForm.propTypes = {
   addBlog: PropTypes.func.isRequired,
-  handleTitleChange: PropTypes.func.isRequired,
-  handleAuthorChange: PropTypes.func.isRequired,
-  handleUrlChange: PropTypes.func.isRequired,
-  newTitle: PropTypes.string.isRequired,
-  newAuthor: PropTypes.string.isRequired,
-  newUrl: PropTypes.string.isRequired
 }
 
 export default BlogForm
