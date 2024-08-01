@@ -137,7 +137,7 @@ const App = () => {
       {user &&
       <div>
         <p>{user.name} logged in
-          <button onClick={() => {
+          <button id="logout-button" onClick={() => {
             window.localStorage.removeItem('loggedBlogappUser')
             setUser(null)
             setMessage({ text: `${user.name} logged out`, type: 'success' })
