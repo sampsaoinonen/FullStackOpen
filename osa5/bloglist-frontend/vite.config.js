@@ -11,6 +11,8 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    host: '127.0.0.1', // changed 'localhost' -> '127.0.0.1'
+    port: 5173
   },
   test: {
     environment: 'jsdom',
@@ -18,3 +20,5 @@ export default defineConfig({
     setupFiles: './testSetup.js',
   }
 })
+
+// host: '127.0.0.1' change made bacause: https://github.com/node-fetch/node-fetch/issues/1624

@@ -58,7 +58,7 @@ describe('Blog app', function() {
       cy.contains('TestiTitle')
       cy.contains('TestiAuthor')
     })
-    
+
     it('A blog can be liked', function() {
       cy.contains('create new blog').click()
       cy.get('input[placeholder="Title"]').type('TestiTitle')
@@ -85,7 +85,7 @@ describe('Blog app', function() {
       cy.contains('TestiTitle')
       cy.contains('TestiAuthor')
 
-      cy.get('#view-button').click()      
+      cy.get('#view-button').click()
       cy.get('#remove-button').click()
       cy.contains('TestiTitle').should('not.exist')
       cy.contains('TestiAuthor').should('not.exist')
@@ -102,7 +102,7 @@ describe('Blog app', function() {
         .find('#view-button')
         .click()
       cy.get('#remove-button').should('be.visible')
-      
+
       cy.get('#logout-button').click()
 
       cy.get('input[name="Username"]').type('meikalainen')
@@ -137,7 +137,7 @@ describe('Blog app', function() {
       cy.get('input[placeholder="Author"]').type('Kolmas Author')
       cy.get('input[placeholder="URL"]').type('http://kolmasblogi.com')
       cy.get('button[type="submit"]').contains('create').click()
-      
+
       cy.contains('Eka Blogi').parent().find('#view-button').click()
       cy.contains('Eka Blogi').parent().find('#like-button').as('ekaBlogiLike')
       cy.get('@ekaBlogiLike').click()
