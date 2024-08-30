@@ -1,3 +1,6 @@
+import { createSlice } from '@reduxjs/toolkit'
+import { setNotification } from './notificationReducer'
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -19,47 +22,39 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject)
 
-const reducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
-  
-  switch(action.type) {
-    case 'NEW_ANECDOTE':
-      return [...state, action.payload]
-    case 'VOTE_ANECDOTE': {
-      const id = action.payload.id
-      const anecdoteToVote = state.find(n => n.id === id)
-      const votedAnecdote = { 
-        ...anecdoteToVote, 
-        votes: anecdoteToVote.votes + 1
+const anecdoteSlice = createSlice({
+  name: 'anecdotes',
+  initialState,
+  reducers: {
+    createAnecdote(state, action) {
+      state.push(action.payload);
+    },
+    voteAnecdote(state, action) {
+      const id = action.payload;
+      const anecdoteToVote = state.find(anecdote => anecdote.id === id);
+      if (anecdoteToVote) {
+        anecdoteToVote.votes += 1;
       }
-      const updatedAnecdotes = state.map(anecdote =>
-        anecdote.id !== id ? anecdote : votedAnecdote 
-      )
-      return updatedAnecdotes.sort((a, b) => b.votes - a.votes)
+      return state.sort((a, b) => b.votes - a.votes);
     }
-    default:
-      return state
+  },
+})
 
+export const { createAnecdote, voteAnecdote } = anecdoteSlice.actions
+
+export const addAnecdote = (content) => {
+  return (dispatch) => {
+    dispatch(createAnecdote({ content, id: getId(), votes: 0 }))
+    dispatch(setNotification(`You added: "${content}"`, 5))
   }
 }
 
-export const createAnecdote = (content) => {
-  return {
-    type: 'NEW_ANECDOTE',
-    payload: {
-      content,      
-      id: getId(),
-      votes: 0
-    }
+export const voteForAnecdote = (id) => {
+  return (dispatch, getState) => {
+    const anecdote = getState().anecdotes.find(anecdote => anecdote.id === id);
+    dispatch(voteAnecdote(id));
+    dispatch(setNotification(`You voted for: "${anecdote.content}"`, 5))
   }
 }
 
-export const voteAnecdote = (id) => {
-  return {
-    type: 'VOTE_ANECDOTE',
-    payload: { id }
-  }
-}
-
-export default reducer
+export default anecdoteSlice.reducer
