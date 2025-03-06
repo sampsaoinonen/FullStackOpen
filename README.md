@@ -63,6 +63,17 @@ Part 4 covers backend development with Node.js and Express. It includes setting 
 
 Part 5 focuses on testing React applications. It covers unit testing with Jest, component testing with React Testing Library, and end-to-end testing with Cypress.
 
+### Part 6: Advanced State Management with Redux
+
+- **Technologies Used**: 
+  - React
+  - Redux
+  - React Redux
+  - Redux Toolkit
+  - Context API
+
+Part 6 focuses on state management in React, introducing Redux for structured global state handling. It covers Redux basics (actions, reducers, store), integrating Redux with React, async actions using Redux Toolkit, Context API vs Redux, and performance optimization.
+
 ## Setup and Running the Application
 
 1. Clone the repository:
