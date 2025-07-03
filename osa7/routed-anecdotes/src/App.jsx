@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import {
   BrowserRouter as Router,
-  Routes, Route, Link, useMatch
+  Routes, Route, Link, useMatch, useNavigate
 } from 'react-router-dom'
 
 const Menu = () => {
@@ -67,6 +67,7 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
+  const navigate = useNavigate()
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
@@ -80,6 +81,12 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    props.setNotification(`a new anecdote "${content}" created!`)
+    props.setNotifColor('green')
+    setTimeout(() => {
+      props.setNotification(null)
+    }, 5000)
+    navigate('/')
   }
 
   return (
@@ -105,6 +112,15 @@ const CreateNew = (props) => {
 
 }
 
+const Notification = ({ message, clr }) => {
+  if (!message) return null
+  return (
+    <div className="notif" style={{ color: clr }}>
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
@@ -124,10 +140,16 @@ const App = () => {
   ])
 
   const [notification, setNotification] = useState('')
+  const [notifColor, setNotifColor] = useState('green')
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`a new anecdote "${anecdote.content}" created!`)
+    setNotifColor('green')
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
   }
 
   const anecdoteById = (id) =>
@@ -153,10 +175,20 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
+      <Notification message={notification} clr={notifColor} />
       <Routes>
         <Route path="/anecdotes/:id" element={<Anecdote anecdote={anecdote} />} />
         <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
-        <Route path="/create" element={<CreateNew addNew={addNew}  />} />
+        <Route
+          path="/create"
+          element={
+            <CreateNew
+              addNew={addNew}
+              setNotification={setNotification}
+              setNotifColor={setNotifColor}
+            />
+          }
+      />
         <Route path="/about" element={<About />} />
       </Routes>
       <Footer />
