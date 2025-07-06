@@ -1,0 +1,60 @@
+{
+  "notes": [
+    {
+      "id": 1,
+      "content": "custom-hooks are awesome!"
+    },
+    {
+      "id": 2,
+      "content": "best feature ever <3"
+    },
+    {
+      "content": "jee",
+      "id": 3
+    },
+    {
+      "content": "dasdas",
+      "id": 4
+    },
+    {
+      "content": "dsasad",
+      "id": 5
+    },
+    {
+      "content": "dsaas",
+      "id": 6
+    }
+  ],
+  "persons": [
+    {
+      "id": 1,
+      "name": "mluukkai",
+      "number": "040-5483923"
+    },
+    {
+      "id": 2,
+      "name": "hellas",
+      "number": "012-123123"
+    },
+    {
+      "name": "sampsa",
+      "number": "0202022",
+      "id": 3
+    },
+    {
+      "name": "sampsa",
+      "number": "0200",
+      "id": 4
+    },
+    {
+      "name": "23",
+      "number": "waswew",
+      "id": 5
+    },
+    {
+      "name": "sas",
+      "number": "sss",
+      "id": 6
+    }
+  ]
+}
